@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Contact</title>
+</head>
+<body>
+    <h1>Add a New Contact</h1>
+
+    <form id="contactForm">
+        <label for="name">Name:</label><br>
+        <input type="text" id="firstname" name="lastname" required><br><br>
+
+        <label for="phone">Phone:</label><br>
+        <input type="text" id="phone" name="phone" required><br><br>
+
+        <label for="avatar">Photo:</label><br>
+        <input type="file" id="avatar" name="avatar" accept="image/*"><br><br>
+
+        <button type="submit">Save Contact</button>
+    </form>
+    
+        <button id="homelink" type="button">Home</button>
+
+    <p id="message"></p>
+
+    <script src="config.js"></script>
+    <script>
+        
+        
+        document.getElementById("contactForm").onsubmit = function(event) {
+            event.preventDefault();
+
+            let form = document.getElementById("contactForm");
+            let formData = new FormData(form);
+
+            fetch(rootPath + "/controller/add-contact/apiContactBook", {
+                method: "POST",
+                body: formData
+            })
+            .then(response => response.json())
+            .then(result => {
+                document.getElementById("message").textContent = "Contact added successfully!";
+                form.reset();
+                
+                headers: {
+                "Authorization": apiKey
+            }
+
+            })
+            .catch(error => {
+                document.getElementById("message").textContent = "Failed to add contact.";
+                console.error("Error:", error);
+            });
+        }
+    </script>
+</body>
+</html>

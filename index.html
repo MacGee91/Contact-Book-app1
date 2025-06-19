@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Contact Book</title>
+</head>
+<body onload="fetchContacts()">
+
+    <div id="table">Contact loading...</div>
+    <button id="refresh" type="button">Refresh</button>
+    <button id="addContact" type="button">Add Contact</button>
+
+    <script src="config.js"></script>
+    <script>
+        function fetchContacts() {
+            fetch(rootPath + "/controller/get-contacts/")
+                .then(function(response) {
+                    return response.json();
+                })
+                .then(function(data) {
+                    displayOutput(data);
+                })
+                .catch(function(error) {
+                    console.error("Error fetching contacts:", error);
+                });
+        }
+
+        function displayOutput(data) {
+            let output = "<table border='1' cellpadding='10'>";
+            output += "<tr><th>Photo</th><th>Name</th><th>Phone</th><th>First Name</th><th>Last Name</th></tr>";
+            
+            for (let contact of data) {
+                output += `
+                    <tr>
+                        <td><img src="${rootPath}/controller/uploads/${contact.avatar}" alt="Photo" width="50" height="50"/></td>
+                        <td>${contact.name}</td>
+                        <td>${contact.phone}</td>
+                        <td>${contact.firstname || ""}</td>
+                        <td>${contact.lastname || ""}</td>
+                    </tr>
+                `;
+            }
+
+            output += "</table>";
+            document.getElementById("table").innerHTML = output;
+        }
+
+        document.getElementById("refresh").onclick = fetchContacts;
+    </script>
+
+</body>
+</html>
